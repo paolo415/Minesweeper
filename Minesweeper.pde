@@ -3,7 +3,7 @@ private static final int NUM_ROWS = 20;
 private static final int NUM_COLS = 20;
 
 private MSButton[][] buttons; //2d array of minesweeper buttons
-private ArrayList <MSButton> mines; //ArrayList of just the minesweeper buttons that are mined
+private ArrayList <MSButton> mines=new ArrayList <MSButton>();//ArrayList of just the minesweeper buttons that are mined
 
 void setup ()
 {
@@ -13,19 +13,23 @@ void setup ()
   // make the manager
   Interactive.make( this );
 
-  //your code to initialize buttons goes here
   buttons= new MSButton[NUM_ROWS][NUM_COLS];
   for (int r=0; r<NUM_ROWS; r++) {
     for (int c=0; c<NUM_COLS; c++) {
       buttons[r][c]= new MSButton(r, c);
     }
   }
-
-  setMines();
+  for (int i=0; i<200; i++) {
+    setMines();
+  }
 }
 public void setMines()
 {
-  //your code
+
+  int r=(int)(Math.random()*20);
+  int c=(int)(Math.random()*20);
+  if (!mines.contains(buttons[r][c]))
+    mines.add(buttons[r][c]);
 }
 
 public void draw ()
@@ -49,13 +53,19 @@ public void displayWinningMessage()
 }
 public boolean isValid(int r, int c)
 {
-  //your code here
+  if(NUM_ROWS>r && NUM_COLS>c && r>=0 && c>=0)
+   return true;
   return false;
 }
 public int countMines(int row, int col)
 {
   int numMines = 0;
-  //your code here
+  for(int r=row-1;r<=row+1;r++){
+   for(int c=col-1;c<=col+1;c++){
+    if(isValid(r, c)==true && mines.contains(buttons[r][c]))
+     numMines=numMines+1;
+   }
+  }
   return numMines;
 }
 public class MSButton
@@ -88,8 +98,8 @@ public class MSButton
   {    
     if (flagged)
       fill(0);
-    // else if( clicked && mines.contains(this) ) 
-    //     fill(255,0,0);
+    else if ( clicked && mines.contains(this) ) 
+      fill(255, 0, 0);
     else if (clicked)
       fill( 200 );
     else 
